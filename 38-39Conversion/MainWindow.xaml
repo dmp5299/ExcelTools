@@ -1,0 +1,43 @@
+﻿<Window x:Class="_38_39Conversion.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_38_39Conversion"
+        ContentRendered="Window_ContentRendered"
+        Icon="./rcmIcon.ico"
+        mc:Ignorable="d"
+        Title="RcmTools" Height="350" Width="530" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="37*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Visibility="Visible" Name="_38ConversionGrid" Background="LightGray" Grid.ColumnSpan="2">
+            <Label x:Name="FilePathLabel" Content="Filepath" HorizontalAlignment="Left" Margin="72,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.413,0.592"/>
+            <TextBox x:Name="FilePathText" Height="23" Margin="129,82,170,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Button Content="Browse" HorizontalAlignment="Left" Margin="361,83,0,0" VerticalAlignment="Top" Width="75" Click="Browse38Excel_Click"/>
+            <Button Content="Convert" HorizontalAlignment="Center" Margin="0,136,0,0" VerticalAlignment="Top" Width="75" Click="Convert_Click" Name="convert38s"/>
+            <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Width="400" Margin="0,60,0,0" Name="_38ConversionStatus"/>
+            <GroupBox Header="38 Conversion" HorizontalAlignment="Left" Height="277" Margin="10,28,0,0" VerticalAlignment="Top" Width="497"/>
+        </Grid>
+        <Grid Visibility="Collapsed" Name="_411GenerationGrid" Background="LightGray" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+            <Label x:Name="FilePath_411Label" Content="Filepath" HorizontalAlignment="Left" Margin="72,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.413,0.592"/>
+            <TextBox x:Name="FilePath_411Text" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="23" Margin="129,82,170,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Button Content="Browse" HorizontalAlignment="Left" Margin="361,83,0,0" VerticalAlignment="Top" Width="75" Click="Browse411Excel_Click"/>
+            <Button Content="Build" HorizontalAlignment="Center" Margin="0,136,0,0" VerticalAlignment="Top" Width="75" Click="Generate411s_Click" Name="build_411s"/>
+            <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Width="400" Margin="0,60,0,0" Name="XmlGenerationStatus"/>
+            <GroupBox Header="411 Generation" HorizontalAlignment="Left" Height="277" Margin="10,28,0,0" VerticalAlignment="Top" Width="497"/>
+        </Grid>
+        <Menu Name="ContentaMenu" HorizontalAlignment="Left" Visibility="Visible" Margin="0,0,0,290" Width="517" Height="25" Grid.ColumnSpan="2" VerticalAlignment="Center">
+            <MenuItem Header="_File" VerticalAlignment="Center">
+                <MenuItem Header="_Close" Click="Close_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Tools" VerticalAlignment="Center">
+                <MenuItem Header="_38Conversion" Click="_38Conversion_Click"/>
+                <MenuItem Header="_411Generation" Click="_Xml411Generation_Click"/>
+            </MenuItem>
+        </Menu>
+    </Grid>
+
+</Window>
