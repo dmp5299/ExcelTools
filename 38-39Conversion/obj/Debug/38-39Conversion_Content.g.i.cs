@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/rcmicon.ico")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/page_excel.png")]
 
 

@@ -7,29 +7,52 @@
         ContentRendered="Window_ContentRendered"
         Icon="./rcmIcon.ico"
         mc:Ignorable="d"
-        Title="RcmTools" Height="350" Width="530" WindowStartupLocation="CenterScreen">
+        Title="RcmTools" Height="350" Width="530" WindowStartupLocation="CenterScreen"   ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="37*"/>
         </Grid.ColumnDefinitions>
         <Grid Visibility="Visible" Name="_38ConversionGrid" Background="LightGray" Grid.ColumnSpan="2">
-            <Label x:Name="FilePathLabel" Content="Filepath" HorizontalAlignment="Left" Margin="72,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.413,0.592"/>
-            <TextBox x:Name="FilePathText" Height="23" Margin="129,82,170,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-            <Button Content="Browse" HorizontalAlignment="Left" Margin="361,83,0,0" VerticalAlignment="Top" Width="75" Click="Browse38Excel_Click"/>
-            <Button Content="Convert" HorizontalAlignment="Center" Margin="0,136,0,0" VerticalAlignment="Top" Width="75" Click="Convert_Click" Name="convert38s"/>
-            <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Width="400" Margin="0,60,0,0" Name="_38ConversionStatus"/>
-            <GroupBox Header="38 Conversion" HorizontalAlignment="Left" Height="277" Margin="10,28,0,0" VerticalAlignment="Top" Width="497"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,70,0,0" Width="395">
+                <TextBox x:Name="FilePathText" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="" Height="23" VerticalAlignment="Top" Margin="0,4,15,0" Width="299"/>
+                <Button Click="Browse38Excel_Click" Margin="0,0,0,0" Width="81" Height="30" VerticalAlignment="top">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Browse  " VerticalAlignment="Center"/>
+                        <Image Source="./Icons/Folder.png" Height="15"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <Button HorizontalAlignment="Center" Margin="0,120,0,0" Height="30" VerticalAlignment="Top" Width="80" Click="Convert_Click" Name="convert38s">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Convert  " VerticalAlignment="Center"/>
+                    <Image Source="./Icons/page_excel.png" Width="20" Height="20"/>
+                </StackPanel>
+            </Button>
+            <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Margin="0,50,0,0" Name="_38ConversionStatus" HorizontalAlignment="Center" Width="395"/>
+            <GroupBox Header="38 Conversion" HorizontalAlignment="Center" Height="283" Margin="0,27,0,0" VerticalAlignment="Top" Width="510"/>
+            <CheckBox Content="ConvertTo39" Name="ConvertTo39_Checkbox" HorizontalAlignment="Left" Margin="63,53,0,0" VerticalAlignment="Top" IsChecked="True"/>
         </Grid>
-        <Grid Visibility="Collapsed" Name="_411GenerationGrid" Background="LightGray" Grid.ColumnSpan="2" HorizontalAlignment="Left">
-            <Label x:Name="FilePath_411Label" Content="Filepath" HorizontalAlignment="Left" Margin="72,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.413,0.592"/>
-            <TextBox x:Name="FilePath_411Text" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="23" Margin="129,82,170,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-            <Button Content="Browse" HorizontalAlignment="Left" Margin="361,83,0,0" VerticalAlignment="Top" Width="75" Click="Browse411Excel_Click"/>
-            <Button Content="Build" HorizontalAlignment="Center" Margin="0,136,0,0" VerticalAlignment="Top" Width="75" Click="Generate411s_Click" Name="build_411s"/>
-            <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Width="400" Margin="0,60,0,0" Name="XmlGenerationStatus"/>
-            <GroupBox Header="411 Generation" HorizontalAlignment="Left" Height="277" Margin="10,28,0,0" VerticalAlignment="Top" Width="497"/>
+        <Grid Visibility="Collapsed" Name="_411GenerationGrid" Background="LightGray" Grid.ColumnSpan="2">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,70,0,0" Width="395">
+                <TextBox x:Name="FilePath_411Text" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="" Height="23" VerticalAlignment="Top" Margin="0,4,15,0" Width="299"/>
+                <Button Click="Browse411Excel_Click" Margin="0,0,0,0" Width="81" Height="30" VerticalAlignment="top">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Browse  " VerticalAlignment="Center"/>
+                        <Image Source="./Icons/Folder.png" Height="15"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <Button HorizontalAlignment="Center" Margin="0,120,0,0" Height="30" VerticalAlignment="Top" Width="80" Click="Generate411s_Click" Name="build_411s">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Build  " VerticalAlignment="Center"/>
+                    <Image Source="./Icons/page_excel.png" Width="20" Height="20"/>
+                </StackPanel>
+            </Button>
+            <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Name="XmlGenerationStatus" Margin="0,50,0,0" HorizontalAlignment="Center" Width="395"/>
+            <GroupBox Header="Xml Generation" HorizontalAlignment="Center" Height="283" Margin="0,27,0,0" VerticalAlignment="Top" Width="510"/>
         </Grid>
-        <Menu Name="ContentaMenu" HorizontalAlignment="Left" Visibility="Visible" Margin="0,0,0,290" Width="517" Height="25" Grid.ColumnSpan="2" VerticalAlignment="Center">
+        <Menu Name="ContentaMenu" HorizontalAlignment="Left" Visibility="Visible" Margin="0,2,0,292" Width="522" Height="26" Grid.ColumnSpan="2" VerticalAlignment="Center">
             <MenuItem Header="_File" VerticalAlignment="Center">
                 <MenuItem Header="_Close" Click="Close_Click"/>
             </MenuItem>

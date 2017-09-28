@@ -19,6 +19,8 @@ using _38_39Conversion.XmlGenerationFiles;
 using System.ComponentModel;
 using System.Threading;
 using _38_39Conversion.ExcelObjects;
+using _38_39Conversion.Interfaces;
+using _38_39Conversion.CustomExceptions;
 
 namespace _38_39Conversion
 {
@@ -70,19 +72,15 @@ namespace _38_39Conversion
                     
                 }
                 else
-                    throw new ArgumentException("Enter excel file path");
+                    throw new InputException("Enter excel file path");
             }
-            catch(ArgumentException a)
+            catch(InputException a)
             {
                 System.Windows.Forms.MessageBox.Show(a.Message);
             }
-            catch(IOException i)
-            {
-                System.Windows.Forms.MessageBox.Show(i.Message);
-            }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -92,37 +90,36 @@ namespace _38_39Conversion
             {
                 if (!string.IsNullOrEmpty(FilePathText.Text))
                 {
-
-                    convert38s.IsEnabled = false;
                     //string[] files = Directory.GetFiles(FilePathText.Text, "*.xlsx| ");
+                    List<object> workerArguments = new List<object>();
                     var files = Directory.EnumerateFiles(FilePathText.Text, "*.*", SearchOption.AllDirectories)
-                    .Where(s => s.EndsWith(".xlsx") || s.EndsWith(".xls" ) && !s.Contains("39"));
+                    .Where(s => s.EndsWith(".xlsx") || s.EndsWith(".xls") && !s.Contains("39"));
+                    workerArguments.Add(files);
+                    workerArguments.Add(ConvertTo39_Checkbox.IsChecked);
                     _38ConversionStatus.Maximum = files.Count();
                     if (files.Count() > 0)
                     {
-                        worker1.RunWorkerAsync(files);
+                        convert38s.IsEnabled = false;
+                        worker1.RunWorkerAsync(workerArguments);
                     }
                     else
                     {
-                        throw new IOException("There are no .xlsx files in the selected directory");
+                        throw new InputException("There are no .xlsx files in the selected directory");
                     }
+
                 }
                 else
                 {
-                    throw new ArgumentException("You must enter a path");
+                    throw new InputException("You must enter a path");
                 }
             }
-            catch(ArgumentException a)
+            catch(InputException a)
             {
                 System.Windows.Forms.MessageBox.Show(a.Message);
             }
-            catch (IOException i)
-            {
-                System.Windows.Forms.MessageBox.Show(i.Message);
-            }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -199,8 +196,11 @@ namespace _38_39Conversion
         private void backgroundWorker1_RunWorkerCompleted(
             object sender, RunWorkerCompletedEventArgs e)
         {
+            if (e.Error != null)
+            {
+                System.Windows.Forms.MessageBox.Show("There was an error! " + e.Error.ToString());
+            }
             build_411s.IsEnabled = true;
-
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -216,17 +216,35 @@ namespace _38_39Conversion
             {
                 List<IDictionary<string, object>> all38Data = new List<IDictionary<string, object>>();
                 int i = 0;
-                foreach (string file in (IEnumerable<string>)e.Argument)
+                List<object> arguments = (List<object>)e.Argument;
+                Boolean convert = (bool)arguments[1];
+                foreach (string file in (IEnumerable<string>)arguments[0])
                 {
                     if (!file.Contains("39"))
                     {
+                        I38Data _xlsConversionObject = new Dash38Xls();
+                        I38Data _xlsxConversionObject = new Dash38Xlsx();
                         if (System.IO.Path.GetExtension(file).Equals(".xlsx"))
                         {
-                            Dash39.build39File(Dash38.parseThirtyEightFile(file));
+                            if(convert)
+                            {
+                                Dash39.build39File(_xlsxConversionObject.parseThirtyEightFile(file));
+                            }
+                            else
+                            {
+                                _xlsxConversionObject.parseThirtyEightFile(file);
+                            }
                         }
                         else
                         {
-                            Dash39.build39File(Dash38.parseThirtyEightXlsFile(file));
+                            if (convert)
+                            {
+                                Dash39.build39File(_xlsConversionObject.parseThirtyEightFile(file));
+                            }
+                            else
+                            {
+                                _xlsConversionObject.parseThirtyEightFile(file);
+                            }
                         }
                     }
                     worker1.ReportProgress(i + 1);
@@ -235,11 +253,11 @@ namespace _38_39Conversion
                 }
                 System.Windows.Forms.MessageBox.Show("done");
             }
-            catch (IOException i)
+            catch (Exception ex)
             {
-                throw new IOException(i.Message);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+                throw new Exception(ex.Message);
             }
-
         }
 
         void _38Converter_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -250,6 +268,10 @@ namespace _38_39Conversion
         private void _38Converter_RunWorkerCompleted(
             object sender, RunWorkerCompletedEventArgs e)
         {
+            if (e.Error != null)
+            {
+                System.Windows.Forms.MessageBox.Show("There was an error! " + e.Error.ToString());
+            }
             convert38s.IsEnabled = true;
 
         }

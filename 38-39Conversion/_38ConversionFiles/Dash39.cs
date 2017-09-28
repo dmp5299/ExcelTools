@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Forms;
 using _38_39Conversion.ExcelStyles;
 using _38_39Conversion.ExcelObjects;
+using _38_39Conversion.Utils;
 
 namespace _38_39Conversion._38ConversionFiles
 {
@@ -27,16 +28,15 @@ namespace _38_39Conversion._38ConversionFiles
 
         }
 
-        public static void build39File(IDictionary<string,object> data)
+        public static void build39File(IDictionary<string, object> data)
         {
             ExcelPackage _package = new ExcelPackage(new MemoryStream());
             var ws1 = _package.Workbook.Worksheets.Add("Worksheet1");
-
             var boldCenter = CellStyles.GetBoldCenter(ws1);
             var boldRight = CellStyles.GetBoldRight(ws1);
 
             //first row
-
+            double heightBefore = ws1.Row(1).Height;
             ws1.Cells["A1"].Value = "S&T FORM";
             ws1.Cells["A1"].StyleName = "BoldCenter";
 
@@ -93,11 +93,11 @@ namespace _38_39Conversion._38ConversionFiles
             ws1.Cells["B7:E7"].Style.Border.Top.Style = ExcelBorderStyle.Medium;
 
             List<Item> items = (List<Item>)data["items"];
-
             int cellRowIndex = 8;
-            foreach(Item item in items)
+            int blanks = 44 - (items.Count + 7);
+            foreach (Item item in items)
             {
-                ws1.Cells["A"+ cellRowIndex].Value = item.ItemNo;
+                ws1.Cells["A" + cellRowIndex].Value = item.ItemNo;
                 if (cellRowIndex == 37)
                 {
                     ws1.Cells["A" + cellRowIndex].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
@@ -107,7 +107,9 @@ namespace _38_39Conversion._38ConversionFiles
                     ws1.Cells["A" + cellRowIndex].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 }
                 ws1.Cells["A" + cellRowIndex].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
+                ws1.Cells["A" + cellRowIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                int lineCount = (int)GenericExcelUtils.GetLineCount(item.Comment, 77);
+                ws1.Row(cellRowIndex).Height = lineCount * heightBefore;
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Value = item.Comment;
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.WrapText = true;
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Merge = true;
@@ -122,19 +124,46 @@ namespace _38_39Conversion._38ConversionFiles
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.Border.Right.Style = ExcelBorderStyle.Medium;
                 cellRowIndex++;
             }
-            cellRowIndex += 1;
+            for (int i = 0; i < blanks; i++)
+            {
+                ws1.Cells["A" + cellRowIndex].Value = "";
+                ws1.Cells["A" + cellRowIndex].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                ws1.Cells["A" + cellRowIndex].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Value = "";
+                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.WrapText = true;
+                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Merge = true;
+                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                cellRowIndex++;
+            }
+            DateTime revDate = DateTime.Parse(data["revDate"].ToString());
+            ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Value = data["form"].ToString() + " Revision " + StringUtils.getInts(data["revision"].ToString()) + " " + StringUtils.formatDateMMDDYYYY(revDate);
+            ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Style.WrapText = true;
+            ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Merge = true;
+            cellRowIndex++;
 
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Value = "VERIFY CURRRENT REVISION OF FORM PRIOR TO USE";
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Style.WrapText = true;
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Merge = true;
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Style.Font.Bold = true;
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-
             ws1.Column(1).Width = 20;
             ws1.Column(2).Width = 25;
+            ws1.Column(3).Width = 10;
             ws1.Column(4).Width = 20;
             ws1.Column(5).Width = 22;
-            string fileWithoutExtension = data["file"].ToString().Substring(0, data["file"].ToString().IndexOf('.'))+"-39"+".xlsx";
+            string fileWithoutExtension = "";
+            if (data["file"].ToString().Contains("038"))
+            {
+                fileWithoutExtension = data["file"].ToString().Substring(0, data["file"].ToString().IndexOf('.')) + ".xlsx";
+                fileWithoutExtension = fileWithoutExtension.Replace("038", "039");
+            }
+            else
+            {
+                fileWithoutExtension = data["file"].ToString().Substring(0, data["file"].ToString().IndexOf('.')) + "-39.xlsx";
+            }
+             
             try
             {
                 _package.SaveAs(new FileInfo(fileWithoutExtension));
@@ -145,4 +174,6 @@ namespace _38_39Conversion._38ConversionFiles
             }
         }
     }
+
+    
 }

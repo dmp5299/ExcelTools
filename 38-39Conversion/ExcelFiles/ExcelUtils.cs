@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using ClosedXML;
+using OfficeOpenXml.Style;
 
 namespace _38_39Conversion.ExcelFiles
 {
@@ -19,6 +20,5 @@ namespace _38_39Conversion.ExcelFiles
             wb.Close();
             app.Quit();
         }
-
     }
 }
