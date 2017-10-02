@@ -10,7 +10,7 @@ namespace _38_39Conversion.Interfaces
 {
     public interface I38Data
     {
-        IDictionary<string, object> parseThirtyEightFile(string file);
+        IDictionary<string, object> parseThirtyEightFile(string file, Boolean clean);
         int getItemNoIndex(object sheet);
         string getMergedValue(object sheet, int row);
     }

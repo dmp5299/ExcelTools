@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_38_39Conversion", "38-39Conversion\_38_39Conversion.csproj", "{97893396-2E6E-4784-B59A-237BA0B9E3FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentaDataExport", "ContentaDataExport\ContentaDataExport.csproj", "{75EAC87E-7E05-4AF1-AB9E-930198E7B319}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{97893396-2E6E-4784-B59A-237BA0B9E3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97893396-2E6E-4784-B59A-237BA0B9E3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97893396-2E6E-4784-B59A-237BA0B9E3FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75EAC87E-7E05-4AF1-AB9E-930198E7B319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75EAC87E-7E05-4AF1-AB9E-930198E7B319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75EAC87E-7E05-4AF1-AB9E-930198E7B319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75EAC87E-7E05-4AF1-AB9E-930198E7B319}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

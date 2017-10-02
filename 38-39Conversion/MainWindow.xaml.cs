@@ -21,6 +21,11 @@ using System.Threading;
 using _38_39Conversion.ExcelObjects;
 using _38_39Conversion.Interfaces;
 using _38_39Conversion.CustomExceptions;
+using _38_39Conversion.ContentaObjects;
+using ContentaDataExport;
+using ContentaDataExport.Utils;
+using PCMClientLib;
+using PCMPortalLib;
 
 namespace _38_39Conversion
 {
@@ -31,14 +36,72 @@ namespace _38_39Conversion
     {
         public BackgroundWorker worker;
         public BackgroundWorker worker1;
-
+        DataConnection conn;
 
         public MainWindow()
         {
             InitializeComponent();
-
             initializeBackgroundWorker();
         }
+
+        private void GenerateContentaReport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DataConnection dataConn = new DataConnection(ContentaUtils.getCookie());
+                checkContentaConnOptions(dataConn);
+                IPCMcommand command = connectToDB(dataConn.Host, dataConn.Socket, dataConn.Database);
+            }
+            catch(Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        private IPCMcommand connectToDB(string host, string socket, string database)
+        {
+            IPCMcommand command = null;
+            try
+            {
+                command = ContentaConnection.getCommandObject(host, socket, database);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error connecting to CSDB: " + ex.Message);
+            }
+            return command;
+        }
+
+        private void checkContentaConnOptions(DataConnection data)
+        {
+            string errorMessage = "";
+            foreach (var prop in data.GetType().GetProperties())
+            {
+                if (prop.GetValue(data, null) == "")
+                {
+                    errorMessage += "Missing " + prop.Name + " connection option\n";
+                }
+            }
+            if(errorMessage.Length > 0)
+            {
+                throw new Exception(errorMessage);
+            }
+        }
+
+        private void ContentaOptions_Click(object sender, RoutedEventArgs e)
+        {
+            ContentaOptions options = new ContentaOptions();
+            options.Show();
+            //options.Closing += new CancelEventHandler(ConnectionWindow_Closing);
+        }
+
+        /*void ConnectionWindow_Closing(object sender, CancelEventArgs e)
+        {
+            ContentaOptions window = (ContentaOptions)sender;
+            conn = window.dataConn;
+        }*/
+
+        
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
@@ -88,29 +151,37 @@ namespace _38_39Conversion
         {
             try
             {
-                if (!string.IsNullOrEmpty(FilePathText.Text))
+                if((bool)ConvertTo39_Checkbox.IsChecked || (bool)Clean38s_Checkbox.IsChecked)
                 {
-                    //string[] files = Directory.GetFiles(FilePathText.Text, "*.xlsx| ");
-                    List<object> workerArguments = new List<object>();
-                    var files = Directory.EnumerateFiles(FilePathText.Text, "*.*", SearchOption.AllDirectories)
-                    .Where(s => s.EndsWith(".xlsx") || s.EndsWith(".xls") && !s.Contains("39"));
-                    workerArguments.Add(files);
-                    workerArguments.Add(ConvertTo39_Checkbox.IsChecked);
-                    _38ConversionStatus.Maximum = files.Count();
-                    if (files.Count() > 0)
+                    if (!string.IsNullOrEmpty(FilePathText.Text))
                     {
-                        convert38s.IsEnabled = false;
-                        worker1.RunWorkerAsync(workerArguments);
+                        //string[] files = Directory.GetFiles(FilePathText.Text, "*.xlsx| ");
+                        List<object> workerArguments = new List<object>();
+                        var files = Directory.EnumerateFiles(FilePathText.Text, "*.*", SearchOption.AllDirectories)
+                        .Where(s => s.EndsWith(".xlsx") || s.EndsWith(".xls") && !s.Contains("39"));
+                        workerArguments.Add(files);
+                        workerArguments.Add(ConvertTo39_Checkbox.IsChecked);
+                        workerArguments.Add(Clean38s_Checkbox.IsChecked);
+                        _38ConversionStatus.Maximum = files.Count();
+                        if (files.Count() > 0)
+                        {
+                            convert38s.IsEnabled = false;
+                            worker1.RunWorkerAsync(workerArguments);
+                        }
+                        else
+                        {
+                            throw new InputException("There are no .xlsx files in the selected directory");
+                        }
+
                     }
                     else
                     {
-                        throw new InputException("There are no .xlsx files in the selected directory");
+                        throw new InputException("You must enter a path");
                     }
-
                 }
                 else
                 {
-                    throw new InputException("You must enter a path");
+                    throw new InputException("You must check Clean38s or Convert39s");
                 }
             }
             catch(InputException a)
@@ -218,6 +289,7 @@ namespace _38_39Conversion
                 int i = 0;
                 List<object> arguments = (List<object>)e.Argument;
                 Boolean convert = (bool)arguments[1];
+                Boolean clean = (bool)arguments[2];
                 foreach (string file in (IEnumerable<string>)arguments[0])
                 {
                     if (!file.Contains("39"))
@@ -228,22 +300,22 @@ namespace _38_39Conversion
                         {
                             if(convert)
                             {
-                                Dash39.build39File(_xlsxConversionObject.parseThirtyEightFile(file));
+                                Dash39.build39File(_xlsxConversionObject.parseThirtyEightFile(file, clean));
                             }
                             else
                             {
-                                _xlsxConversionObject.parseThirtyEightFile(file);
+                                _xlsxConversionObject.parseThirtyEightFile(file,clean);
                             }
                         }
                         else
                         {
                             if (convert)
                             {
-                                Dash39.build39File(_xlsConversionObject.parseThirtyEightFile(file));
+                                Dash39.build39File(_xlsConversionObject.parseThirtyEightFile(file,clean));
                             }
                             else
                             {
-                                _xlsConversionObject.parseThirtyEightFile(file);
+                                _xlsConversionObject.parseThirtyEightFile(file,clean);
                             }
                         }
                     }

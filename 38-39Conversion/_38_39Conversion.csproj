@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -89,6 +89,26 @@
     <Reference Include="NPOI.OpenXmlFormats">
       <HintPath>..\..\..\..\..\Downloads\NPOI 2.2.1 binary package\Release\Net40\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
+    <Reference Include="PCMAdminAPILib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=932eaae8b4351841">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\XyEnterprise\Contenta\encaps\Samples\C#\Debug\PCMAdminAPILib.dll</HintPath>
+    </Reference>
+    <Reference Include="PCMClientLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=932eaae8b4351841">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\XyEnterprise\Contenta\System\PCMClientLib.dll</HintPath>
+    </Reference>
+    <Reference Include="PCMPortalLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=932eaae8b4351841">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\encaps\Samples\C#\Debug\PCMPortalLib.dll</HintPath>
+    </Reference>
+    <Reference Include="PCMtoolsAPILib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=932eaae8b4351841">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\XyEnterprise\Contenta\System\PCMtoolsAPILib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -112,6 +132,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ContentaObjects\DataConnection.cs" />
+    <Compile Include="ContentaOptions.xaml.cs">
+      <DependentUpon>ContentaOptions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomExceptions\InputException.cs" />
     <Compile Include="ExcelObjects\Column.cs" />
     <Compile Include="ExcelObjects\EPPLusExtensions.cs" />
@@ -135,6 +159,10 @@
     <Compile Include="_38ConversionFiles\Dash38Xlsx.cs" />
     <Compile Include="_38ConversionFiles\Dash39.cs" />
     <Compile Include="XmlGenerationFiles\_411Xml.cs" />
+    <Page Include="ContentaOptions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -239,6 +267,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Factories\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ContentaDataExport\ContentaDataExport.csproj">
+      <Project>{75eac87e-7e05-4af1-ab9e-930198e7b319}</Project>
+      <Name>ContentaDataExport</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\xylogo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\text_align_justify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\xml.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,5 @@
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\obj\Debug\ContentaDataExport.csprojResolveAssemblyReference.cache
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\ContentaDataExport.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\ContentaDataExport.pdb
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\obj\Debug\ContentaDataExport.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\obj\Debug\ContentaDataExport.pdb

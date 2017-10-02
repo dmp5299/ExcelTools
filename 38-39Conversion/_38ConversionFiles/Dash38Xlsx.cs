@@ -15,7 +15,7 @@ namespace _38_39Conversion._38ConversionFiles
 {
     class Dash38Xlsx : I38Data
     {
-        public IDictionary<string, object> parseThirtyEightFile(string file)
+        public IDictionary<string, object> parseThirtyEightFile(string file, Boolean clean)
         {
             IDictionary<string, object> dict = new Dictionary<string, object>();
             var package = new ExcelPackage(new FileInfo(file));
@@ -23,7 +23,7 @@ namespace _38_39Conversion._38ConversionFiles
             ExcelUtils xlsxUtils = new ExcelXlsxUtils();
             List<double> colWidths = xlsxUtils.getColWidths(workSheet);
             dict["file"] = file;
-            dict["form"] = workSheet.Cells["E1"].Value.ToString();
+            dict["form"] = workSheet.Cells["E1"].Value.ToString().Replace("38", "39");
             dict["page"] = workSheet.Cells["I1"].Value.ToString();
             dict["revision"] = workSheet.Cells["E2"].Value.ToString();
             long dateNum = Int32.Parse(workSheet.Cells["I2"].Value.ToString());
@@ -50,35 +50,36 @@ namespace _38_39Conversion._38ConversionFiles
                     if (getMergedValue(workSheet, i + 1) == "")
                         break;
                 }
-                while (workSheet.Cells["A" + (i + 1)].Value == null)
+                if(clean)
                 {
-                    
-                    mergedValue += getMergedValue(workSheet, (i + 1));
-                    if (getMergedValue(workSheet, (i + 1)) == "")
+                    while (workSheet.Cells["A" + (i + 1)].Value == null)
                     {
-                        if (getMergedValue(workSheet, i + 2) == "")
-                            break;
+
+                        mergedValue += getMergedValue(workSheet, (i + 1));
+                        if (getMergedValue(workSheet, (i + 1)) == "")
+                        {
+                            if (getMergedValue(workSheet, i + 2) == "")
+                                break;
+                        }
+                        i++;
+                        rowsToBeDeleted++;
                     }
-                    i++;
-                    rowsToBeDeleted++;
+
+                    if (rowsToBeDeleted > 0)
+                    {
+                        double heightBefore = workSheet.Row(1).Height;
+                        totalRowsDeleted += rowsToBeDeleted;
+                        xlsxUtils.deleteRows(package, workSheet, rowsToBeDeleted, ref i);
+                        workSheet.Cells["D" + i + ":" + "G" + i].Style.WrapText = true;
+                        int lineCount = GenericExcelUtils.GetLineCount(mergedValue, (int)GenericExcelUtils.getRangeWidth(colWidths, 3, 6));
+                        workSheet.Row(i).Height = lineCount * heightBefore;
+                        workSheet.Cells["D" + i + ":" + "G" + i].Value = mergedValue;
+                        workSheet.Cells["A" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        workSheet.Cells["B" + i + ":" + "C" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        workSheet.Cells["I" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        workSheet.Cells["H" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    }
                 }
-
-                if(rowsToBeDeleted > 0)
-                {
-                    double heightBefore = workSheet.Row(1).Height;
-                    totalRowsDeleted += rowsToBeDeleted;
-                    xlsxUtils.deleteRows(package,workSheet, rowsToBeDeleted, ref i);
-                    workSheet.Cells["D" + i + ":" + "G" + i].Style.WrapText = true;
-                    int lineCount = GenericExcelUtils.GetLineCount(mergedValue, (int)GenericExcelUtils.getRangeWidth(colWidths,3,6));
-                    workSheet.Row(i).Height = lineCount * heightBefore;
-                    workSheet.Cells["D" + i + ":" + "G" + i].Value = mergedValue;
-                    workSheet.Cells["A" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    workSheet.Cells["B" + i + ":" + "C" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    workSheet.Cells["I" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    workSheet.Cells["H" + i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                }
-
-
                 if (workSheet.Cells["A" + i].Value != null)
                 {
                     itemNo = workSheet.Cells["A" + i].Value.ToString();

@@ -22,7 +22,7 @@ namespace _38_39Conversion._38ConversionFiles
     {
         
 
-        public IDictionary<string, object> parseThirtyEightFile(string file)
+        public IDictionary<string, object> parseThirtyEightFile(string file, Boolean clean)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace _38_39Conversion._38ConversionFiles
                 ExcelXlsUtils xlsUtils = new ExcelXlsUtils();
                 List<double> colWidths = xlsUtils.getColWidths(sheet);
                 dict["file"] = file;
-                dict["form"] = getCellReferenceValue("E1", sheet);
+                dict["form"] = getCellReferenceValue("E1", sheet).Replace("38","39");
                 dict["page"] = getCellReferenceValue("I1", sheet);
                 dict["revision"] = getCellReferenceValue("E2", sheet);
                 dict["revDate"] = getCellReferenceValue("I2", sheet);
@@ -64,35 +64,38 @@ namespace _38_39Conversion._38ConversionFiles
                             break;
                         }
                     }
-                    while (getCellReferenceValue(("A" + (i + 1)).ToString(), sheet).ToString() == "")
+                    if (clean)
                     {
-                        mergedValue += getMergedValue(sheet, (i + 1));
-                        if (getMergedValue(sheet, (i + 1)) == "")
+                        while (getCellReferenceValue(("A" + (i + 1)).ToString(), sheet).ToString() == "")
                         {
-                            if (getMergedValue(sheet, i + 2) == "")
-                                break;
+                            mergedValue += getMergedValue(sheet, (i + 1));
+                            if (getMergedValue(sheet, (i + 1)) == "")
+                            {
+                                if (getMergedValue(sheet, i + 2) == "")
+                                    break;
+                            }
+                            i++;
+                            rowsToBeDeleted++;
                         }
-                        i++;
-                        rowsToBeDeleted++;
-                    }
-                    if (rowsToBeDeleted > 0)
-                    {
-                        double heightBefore = sheet.GetRow(1).Height;
-                        totalRowsDeleted += rowsToBeDeleted;
-                        xlsUtils.deleteRows(hssfwb, sheet, rowsToBeDeleted, ref i, file);
-                        int lineCount = GenericExcelUtils.GetLineCount(mergedValue, (int)GenericExcelUtils.getRangeWidth(colWidths, 3, 6), "xls");
-                        sheet.GetRow(i - 1).GetCell(3).CellStyle.WrapText = true;
-                        sheet.GetRow(i - 1).Height = (short)((lineCount*heightBefore)+(100*(lineCount-1)));
-                        sheet.GetRow(i-1).GetCell(3).SetCellValue(mergedValue);
-                        sheet.GetRow(i - 1).GetCell(0).CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        sheet.GetRow(i - 1).GetCell(1).CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        sheet.GetRow(i - 1).GetCell(7).CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        sheet.GetRow(i - 1).GetCell(8).CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+                        if (rowsToBeDeleted > 0)
                         {
-                            hssfwb.Write(fs);
+                            double heightBefore = sheet.GetRow(1).Height;
+                            totalRowsDeleted += rowsToBeDeleted;
+                            xlsUtils.deleteRows(hssfwb, sheet, rowsToBeDeleted, ref i, file);
+                            int lineCount = GenericExcelUtils.GetLineCount(mergedValue, (int)GenericExcelUtils.getRangeWidth(colWidths, 3, 6), "xls");
+                            sheet.GetRow(i - 1).GetCell(3).CellStyle.WrapText = true;
+                            sheet.GetRow(i - 1).Height = (short)((lineCount * heightBefore) + (100 * (lineCount - 1)));
+                            sheet.GetRow(i - 1).GetCell(3).SetCellValue(mergedValue);
+                            sheet.GetRow(i - 1).GetCell(0).CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            sheet.GetRow(i - 1).GetCell(1).CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            sheet.GetRow(i - 1).GetCell(7).CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            sheet.GetRow(i - 1).GetCell(8).CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                            using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+                            {
+                                hssfwb.Write(fs);
+                            }
+
                         }
-                        
                     }
                     itemNo = getCellReferenceValue(("A" + i).ToString(), sheet).ToString();
                     Item item = new Item

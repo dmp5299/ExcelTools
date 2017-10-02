@@ -32,6 +32,7 @@
             <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Margin="0,50,0,0" Name="_38ConversionStatus" HorizontalAlignment="Center" Width="395"/>
             <GroupBox Header="38 Conversion" HorizontalAlignment="Center" Height="283" Margin="0,27,0,0" VerticalAlignment="Top" Width="510"/>
             <CheckBox Content="ConvertTo39" Name="ConvertTo39_Checkbox" HorizontalAlignment="Left" Margin="63,53,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <CheckBox Content="Clean38s" Name="Clean38s_Checkbox" HorizontalAlignment="Left" Margin="160,53,0,0" VerticalAlignment="Top" IsChecked="True"/>
         </Grid>
         <Grid Visibility="Collapsed" Name="_411GenerationGrid" Background="LightGray" Grid.ColumnSpan="2">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,70,0,0" Width="395">
@@ -46,7 +47,7 @@
             <Button HorizontalAlignment="Center" Margin="0,120,0,0" Height="30" VerticalAlignment="Top" Width="80" Click="Generate411s_Click" Name="build_411s">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Build  " VerticalAlignment="Center"/>
-                    <Image Source="./Icons/page_excel.png" Width="20" Height="20"/>
+                    <Image Source="./Icons/xml.png" Width="20" Height="20"/>
                 </StackPanel>
             </Button>
             <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Name="XmlGenerationStatus" Margin="0,50,0,0" HorizontalAlignment="Center" Width="395"/>
@@ -54,11 +55,35 @@
         </Grid>
         <Menu Name="ContentaMenu" HorizontalAlignment="Left" Visibility="Visible" Margin="0,2,0,292" Width="522" Height="26" Grid.ColumnSpan="2" VerticalAlignment="Center">
             <MenuItem Header="_File" VerticalAlignment="Center">
-                <MenuItem Header="_Close" Click="Close_Click"/>
+                <MenuItem Header="_Close" Click="Close_Click">
+                    <MenuItem.Icon>
+                        <Image Source="./Icons/cancel.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Tools" VerticalAlignment="Center">
-                <MenuItem Header="_38Conversion" Click="_38Conversion_Click"/>
-                <MenuItem Header="_411Generation" Click="_Xml411Generation_Click"/>
+                <MenuItem Header="_38Conversion" Click="_38Conversion_Click">
+                    <MenuItem.Icon>
+                        <Image Source="./Icons/page_excel.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_411Generation" Click="_Xml411Generation_Click">
+                    <MenuItem.Icon>
+                        <Image Source="./Icons/xml.png" Height="18"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Contenta" VerticalAlignment="Center">
+                <MenuItem Header="_Generate Report (in development)" Click="GenerateContentaReport_Click" IsEnabled="false">
+                    <MenuItem.Icon>
+                        <Image Source="./Icons/xylogo.ico" Height="18"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Options" Click="ContentaOptions_Click">
+                    <MenuItem.Icon>
+                        <Image Source="./Icons/xylogo.ico" Height="18"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
     </Grid>

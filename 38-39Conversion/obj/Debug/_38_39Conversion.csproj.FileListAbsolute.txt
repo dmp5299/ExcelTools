@@ -28,3 +28,7 @@ C:\Users\dpothier\documents\visual studio 2017\Projects\38-39Conversion\38-39Con
 C:\Users\dpothier\documents\visual studio 2017\Projects\38-39Conversion\38-39Conversion\bin\Debug\38-39Conversion.application
 C:\Users\dpothier\documents\visual studio 2017\Projects\38-39Conversion\38-39Conversion\obj\Debug\38-39Conversion.exe.manifest
 C:\Users\dpothier\documents\visual studio 2017\Projects\38-39Conversion\38-39Conversion\obj\Debug\38-39Conversion.application
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\38-39Conversion\obj\Debug\ContentaOptions.g.cs
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\38-39Conversion\obj\Debug\ContentaOptions.baml
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\38-39Conversion\bin\Debug\ContentaDataExport.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\38-39Conversion\bin\Debug\ContentaDataExport.pdb
