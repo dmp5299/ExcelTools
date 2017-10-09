@@ -1,8 +1,10 @@
-﻿using System;
+﻿using PCMClientLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace ContentaDataExport.Utils
 {
@@ -74,5 +76,25 @@ namespace ContentaDataExport.Utils
             }
             return wipId;
         }
+
+        public static string getWipProjects(PCMClientLib.IPCMdata projects, string wipId)
+        {
+            string projectIdString = "";
+            for (int i = 0; i < projects.RecordCount; i++)
+            {
+                string projectId = projects.GetValueByLabel(i, "OBJECT_ID");
+                projectIdString = (wipId + @"/" + projectId) + @"|" + projectIdString;
+            }
+            return projectIdString;
+        }
+
+        public static void getContentaAllObjects(IPCMcommand command)
+        {
+            command.Select("/#1/#2/#6");
+            IPCMdata S1000Dcontainers = command.ListChildren();
+            string wipId = ContentaUtils.getWhip(S1000Dcontainers);
+
+        }
+
     }
 }

@@ -68,17 +68,16 @@ namespace _38_39Conversion._38ConversionFiles
 
             ws1.Cells["D2"].Value = "Revision Date:";
             ws1.Cells["D2"].StyleName = "BoldRight";
-
             ws1.Cells["E2"].Value = data["revDate"].ToString();
             ws1.Cells["E2"].Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
             ws1.Cells["E2"].Style.Border.Right.Style = ExcelBorderStyle.Medium;
-
+            
             ws1.Cells["B4:E4"].Value = "PRODUCT IMPROVEMENT RESPONSE WORKSHEET";
             ws1.Cells["B4:E4"].Merge = true;
             ws1.Cells["B4:E4"].Style.Font.Bold = true;
             ws1.Cells["B4:E4"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-            ws1.Cells["B5:E5"].Value = "Disposition all Invalid comments from SA20038 form";
+            ws1.Cells["B5:E5"].Value = "Disposition all Invalid comments from SA20039 form";
             ws1.Cells["B5:E5"].Merge = true;
             ws1.Cells["B5:E5"].Style.Font.Bold = true;
             ws1.Cells["B5:E5"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
@@ -97,7 +96,7 @@ namespace _38_39Conversion._38ConversionFiles
             int blanks = 44 - (items.Count + 7);
             foreach (Item item in items)
             {
-                ws1.Cells["A" + cellRowIndex].Value = item.ItemNo;
+                ws1.Cells["A" + cellRowIndex].Value = "";
                 if (cellRowIndex == 37)
                 {
                     ws1.Cells["A" + cellRowIndex].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
@@ -110,7 +109,7 @@ namespace _38_39Conversion._38ConversionFiles
                 ws1.Cells["A" + cellRowIndex].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                 int lineCount = (int)GenericExcelUtils.GetLineCount(item.Comment, 77);
                 ws1.Row(cellRowIndex).Height = lineCount * heightBefore;
-                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Value = item.Comment;
+                ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Value = "";
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.WrapText = true;
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Merge = true;
                 if (cellRowIndex == 37)
@@ -137,8 +136,16 @@ namespace _38_39Conversion._38ConversionFiles
                 ws1.Cells["B" + cellRowIndex + ":E" + cellRowIndex].Style.Border.Right.Style = ExcelBorderStyle.Medium;
                 cellRowIndex++;
             }
-            DateTime revDate = DateTime.Parse(data["revDate"].ToString());
-            ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Value = data["form"].ToString() + " Revision " + StringUtils.getInts(data["revision"].ToString()) + " " + StringUtils.formatDateMMDDYYYY(revDate);
+            DateTime revDate;
+            if (DateTime.TryParse(data["revDate"].ToString(), out revDate))
+            {
+                ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Value = data["form"].ToString() + " Revision " + StringUtils.getInts(data["revision"].ToString())
+                + " " + StringUtils.formatDateMMDDYYYY(revDate);
+            }
+            else
+            {
+                ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Value = data["form"].ToString() + " Revision " + StringUtils.getInts(data["revision"].ToString());
+            }
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Style.WrapText = true;
             ws1.Cells["A" + cellRowIndex + ":E" + cellRowIndex].Merge = true;
             cellRowIndex++;
@@ -170,7 +177,7 @@ namespace _38_39Conversion._38ConversionFiles
             }
             catch(Exception i)
             {
-                MessageBox.Show(i.Message);
+                throw new Exception("Error saving " + fileWithoutExtension + ": Check if this file is open.");
             }
         }
     }

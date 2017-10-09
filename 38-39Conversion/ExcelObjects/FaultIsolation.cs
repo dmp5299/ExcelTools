@@ -13,7 +13,9 @@ namespace _38_39Conversion.ExcelObjects
         public string FaultCode { get; set; }
         public string MaintenanceTaskName { get; set; }
         public string FaultIsolationProcedureId { get; set; }
+        public string FailureName { get; set; }
         public string _920DmcTitle { get; set; }
         public string _920DMC { get; set; }
+        public string Name { get; set; }
     }
 }

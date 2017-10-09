@@ -26,6 +26,7 @@ using ContentaDataExport;
 using ContentaDataExport.Utils;
 using PCMClientLib;
 using PCMPortalLib;
+using ContentaDataExport.ContentaClasses;
 
 namespace _38_39Conversion
 {
@@ -36,7 +37,7 @@ namespace _38_39Conversion
     {
         public BackgroundWorker worker;
         public BackgroundWorker worker1;
-        DataConnection conn;
+        PCMClientLib.PCMConnection conn;
 
         public MainWindow()
         {
@@ -51,6 +52,8 @@ namespace _38_39Conversion
                 DataConnection dataConn = new DataConnection(ContentaUtils.getCookie());
                 checkContentaConnOptions(dataConn);
                 IPCMcommand command = connectToDB(dataConn.Host, dataConn.Socket, dataConn.Database);
+                ContentaModule m = new ContentaModule();
+                m.getContentaObjects(command);
             }
             catch(Exception ex)
             {
@@ -63,7 +66,8 @@ namespace _38_39Conversion
             IPCMcommand command = null;
             try
             {
-                command = ContentaConnection.getCommandObject(host, socket, database);
+                conn = new PCMConnection();
+                command = ContentaConnection.getCommandObject(conn,host, socket, database);
             }
             catch (Exception ex)
             {
@@ -92,16 +96,7 @@ namespace _38_39Conversion
         {
             ContentaOptions options = new ContentaOptions();
             options.Show();
-            //options.Closing += new CancelEventHandler(ConnectionWindow_Closing);
         }
-
-        /*void ConnectionWindow_Closing(object sender, CancelEventArgs e)
-        {
-            ContentaOptions window = (ContentaOptions)sender;
-            conn = window.dataConn;
-        }*/
-
-        
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
@@ -143,7 +138,8 @@ namespace _38_39Conversion
             }
             catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                build_411s.IsEnabled = true;
+                System.Windows.Forms.MessageBox.Show(ex.Message);
             }
         }
 
@@ -254,22 +250,21 @@ namespace _38_39Conversion
             BackgroundWorker worker = sender as BackgroundWorker;
             try
             {
-                
                 ExcelParser.get411Dms(worker,(List<_411Module>)e.Argument);
             }
-            catch (IOException i)
+            catch(Exception ex)
             {
-                throw new IOException(i.Message);
+                throw new Exception(ex.Message);
             }
-
         }
 
         private void backgroundWorker1_RunWorkerCompleted(
             object sender, RunWorkerCompletedEventArgs e)
-        {
+        { 
             if (e.Error != null)
             {
-                System.Windows.Forms.MessageBox.Show("There was an error! " + e.Error.ToString());
+                XmlGenerationStatus.Value = 0;
+                System.Windows.Forms.MessageBox.Show(e.Error.Message);
             }
             build_411s.IsEnabled = true;
         }
@@ -320,14 +315,13 @@ namespace _38_39Conversion
                         }
                     }
                     worker1.ReportProgress(i + 1);
-                    Thread.Sleep(100);
+                    //Thread.Sleep(5);
                     i++;
                 }
                 System.Windows.Forms.MessageBox.Show("done");
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
                 throw new Exception(ex.Message);
             }
         }
@@ -342,10 +336,10 @@ namespace _38_39Conversion
         {
             if (e.Error != null)
             {
-                System.Windows.Forms.MessageBox.Show("There was an error! " + e.Error.ToString());
+                _38ConversionStatus.Value = 0;
+                System.Windows.Forms.MessageBox.Show(e.Error.Message);
             }
             convert38s.IsEnabled = true;
-
         }
     }
 

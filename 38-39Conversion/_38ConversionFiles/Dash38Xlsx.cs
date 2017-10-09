@@ -18,22 +18,31 @@ namespace _38_39Conversion._38ConversionFiles
         public IDictionary<string, object> parseThirtyEightFile(string file, Boolean clean)
         {
             IDictionary<string, object> dict = new Dictionary<string, object>();
-            var package = new ExcelPackage(new FileInfo(file));
+            ExcelPackage package;
+            try
+            {
+                package = new ExcelPackage(new FileInfo(file));
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error opening file: " + file + ". Please check if this file is open.");
+            }
             ExcelWorksheet workSheet = package.Workbook.Worksheets.FirstOrDefault();
             ExcelUtils xlsxUtils = new ExcelXlsxUtils();
             List<double> colWidths = xlsxUtils.getColWidths(workSheet);
             dict["file"] = file;
-            dict["form"] = workSheet.Cells["E1"].Value.ToString().Replace("38", "39");
-            dict["page"] = workSheet.Cells["I1"].Value.ToString();
-            dict["revision"] = workSheet.Cells["E2"].Value.ToString();
-            long dateNum = Int32.Parse(workSheet.Cells["I2"].Value.ToString());
-            dict["revDate"] = Utils.StringUtils.formatWithWords(DateTime.FromOADate(dateNum));
-            dict["model"] = workSheet.Cells["B4:C4"].Value.ToString();
-            dict["deliverableNo"] = workSheet.Cells["E4"].Value.ToString();
-            dict["statDate"] = workSheet.Cells["I4"].Value.ToString();
-            dict["reviewedBy"] = workSheet.Cells["C5:E5"].Value.ToString();
-            dict["date"] = workSheet.Cells["I5"].Value == null ? "" : workSheet.Cells["I5"].Value.ToString();
-            dict["author"] = workSheet.Cells["C7:E7"].Value.ToString();
+            dict["form"] = getCell("E1", workSheet).Replace("38","39");
+            dict["page"] = getCell("I1", workSheet);
+            dict["revision"] = getCell("E2", workSheet);
+            if (workSheet.Cells["I2"].Value != null)
+            {
+                long dateNum = Int32.Parse(workSheet.Cells["I2"].Value.ToString());
+                dict["revDate"] = Utils.StringUtils.formatWithWords(DateTime.FromOADate(dateNum));
+            }
+            else
+            {
+                dict["revDate"] = "";
+            }
             List<Item> items = new List<Item>();
             Boolean keepGoing = true;
             int i = getItemNoIndex(workSheet) + 1;
@@ -50,7 +59,7 @@ namespace _38_39Conversion._38ConversionFiles
                     if (getMergedValue(workSheet, i + 1) == "")
                         break;
                 }
-                if(clean)
+                if (clean)
                 {
                     while (workSheet.Cells["A" + (i + 1)].Value == null)
                     {
@@ -93,16 +102,25 @@ namespace _38_39Conversion._38ConversionFiles
                 items.Add(item);
                 i++;
             }
-            if(totalRowsDeleted > 0)
+            if (totalRowsDeleted > 0)
             {
-                xlsxUtils.addBlankRows(package, workSheet, totalRowsDeleted, (getItemNoIndex(workSheet) + 1)+items.Count);
+                xlsxUtils.addBlankRows(package, workSheet, totalRowsDeleted, (getItemNoIndex(workSheet) + 1) + items.Count);
             }
             dict.Add("items", items);
             return dict;
         }
 
-        
-
+        public string getCell(string cell, ExcelWorksheet worksheet)
+        {
+            if(worksheet.Cells[cell].Value == null)
+            {
+                return "";
+            }
+            else
+            {
+                return worksheet.Cells[cell].Value.ToString();
+            }
+        }
         public int getItemNoIndex(object sheet)
         {
             ExcelWorksheet workSheet = (ExcelWorksheet)sheet;

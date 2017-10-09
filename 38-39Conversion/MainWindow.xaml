@@ -53,7 +53,7 @@
             <ProgressBar Minimum="0" Maximum="100" Value="0" Height="30" Name="XmlGenerationStatus" Margin="0,50,0,0" HorizontalAlignment="Center" Width="395"/>
             <GroupBox Header="Xml Generation" HorizontalAlignment="Center" Height="283" Margin="0,27,0,0" VerticalAlignment="Top" Width="510"/>
         </Grid>
-        <Menu Name="ContentaMenu" HorizontalAlignment="Left" Visibility="Visible" Margin="0,2,0,292" Width="522" Height="26" Grid.ColumnSpan="2" VerticalAlignment="Center">
+        <Menu Name="ContentaMenu" HorizontalAlignment="Left" Visibility="Visible" Margin="0,0,0,292" Width="522" Height="26" Grid.ColumnSpan="2" VerticalAlignment="Top">
             <MenuItem Header="_File" VerticalAlignment="Center">
                 <MenuItem Header="_Close" Click="Close_Click">
                     <MenuItem.Icon>
@@ -74,7 +74,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Contenta" VerticalAlignment="Center">
-                <MenuItem Header="_Generate Report (in development)" Click="GenerateContentaReport_Click" IsEnabled="false">
+                <MenuItem Header="_Generate Report (in development)" Click="GenerateContentaReport_Click">
                     <MenuItem.Icon>
                         <Image Source="./Icons/xylogo.ico" Height="18"/>
                     </MenuItem.Icon>

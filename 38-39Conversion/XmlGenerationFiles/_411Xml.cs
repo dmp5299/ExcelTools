@@ -24,328 +24,332 @@ namespace _38_39Conversion.XmlGenerationFiles
             {
                 _920Xml.build920Dm(_411ModuleData[i]._920Element, _411ModuleData[i].excelPath);
                 build411Dm(_411ModuleData[i]);
-                worker.ReportProgress(i+1);
-                Thread.Sleep(100);
+                worker.ReportProgress(i + 1);
+                //Thread.Sleep(5);
+                
             }
             MessageBox.Show("done");
         }
 
         public static void build411Dm(_411Module _411)
         {
-            XmlDocument doc = new XmlDocument();
-            XmlDeclaration xmldecl = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-            XmlNode dmodule = doc.CreateElement("dmodule");
+                XmlDocument doc = new XmlDocument();
+                XmlDeclaration xmldecl = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                XmlNode dmodule = doc.CreateElement("dmodule");
 
-            XmlNode identAndStatusSection = doc.CreateElement("identAndStatusSection");
+                XmlNode identAndStatusSection = doc.CreateElement("identAndStatusSection");
 
-            XmlNode dmAddress = doc.CreateElement("dmAddress");
+                XmlNode dmAddress = doc.CreateElement("dmAddress");
 
-            XmlNode dmIdent = doc.CreateElement("dmIdent");
+                XmlNode dmIdent = doc.CreateElement("dmIdent");
 
             //populate dmCode--------------------------
-            XmlNode dmCode = XmlUtils.BuildDmRef(_411._411DMC, doc);
 
-            dmIdent.AppendChild(dmCode);
+                XmlNode dmCode = XmlUtils.BuildDmRef(_411._411DMC, doc);
 
+                dmIdent.AppendChild(dmCode);
             //Language element------------------------------------------------
-
             XmlNode language = doc.CreateElement("language");
 
-            XmlAttribute countryIsoCode = doc.CreateAttribute("countryIsoCode");
-            countryIsoCode.InnerText = "US";
-            language.Attributes.Append(countryIsoCode);
+                XmlAttribute countryIsoCode = doc.CreateAttribute("countryIsoCode");
+                countryIsoCode.InnerText = "US";
+                language.Attributes.Append(countryIsoCode);
 
-            XmlAttribute languageIsoCode = doc.CreateAttribute("languageIsoCode");
-            languageIsoCode.InnerText = "sx";
-            language.Attributes.Append(languageIsoCode);
+                XmlAttribute languageIsoCode = doc.CreateAttribute("languageIsoCode");
+                languageIsoCode.InnerText = "en";
+                language.Attributes.Append(languageIsoCode);
+                dmIdent.AppendChild(language);
 
-            dmIdent.AppendChild(language);
+                //issueInfo element------------------------------------------------
 
-            //issueInfo element------------------------------------------------
+                XmlNode issueInfo = doc.CreateElement("issueInfo");
 
-            XmlNode issueInfo = doc.CreateElement("issueInfo");
+                XmlAttribute inWork = doc.CreateAttribute("inWork");
+                inWork.InnerText = "00";
+                issueInfo.Attributes.Append(inWork);
+                XmlAttribute issueNumber = doc.CreateAttribute("issueNumber");
+                issueNumber.InnerText = "000";
+                issueInfo.Attributes.Append(issueNumber);
 
-            XmlAttribute inWork = doc.CreateAttribute("inWork");
-            inWork.InnerText = "00";
-            issueInfo.Attributes.Append(inWork);
+                dmIdent.AppendChild(issueInfo);
 
-            XmlAttribute issueNumber = doc.CreateAttribute("issueNumber");
-            issueNumber.InnerText = "000";
-            issueInfo.Attributes.Append(issueNumber);
+                dmAddress.AppendChild(dmIdent);
 
-            dmIdent.AppendChild(issueInfo);
+                //End of dmIdent-----------------------------------------------------
 
-            dmAddress.AppendChild(dmIdent);
+                XmlNode dmAddressItems = doc.CreateElement("dmAddressItems");
 
-            //End of dmIdent-----------------------------------------------------
+                //IssueDate----------------------------------------------------------
 
-            XmlNode dmAddressItems = doc.CreateElement("dmAddressItems");
+                XmlNode issueDate = doc.CreateElement("issueDate");
 
-            //IssueDate----------------------------------------------------------
+                XmlAttribute day = doc.CreateAttribute("day");
+                day.InnerText = "15";
+                issueDate.Attributes.Append(day);
+                XmlAttribute month = doc.CreateAttribute("month");
+                month.InnerText = "05";
+                issueDate.Attributes.Append(month);
 
-            XmlNode issueDate = doc.CreateElement("issueDate");
+                XmlAttribute year = doc.CreateAttribute("year");
+                year.InnerText = "2015";
+                issueDate.Attributes.Append(year);
 
-            XmlAttribute day = doc.CreateAttribute("day");
-            day.InnerText = "15";
-            issueDate.Attributes.Append(day);
+                dmAddressItems.AppendChild(issueDate);
 
-            XmlAttribute month = doc.CreateAttribute("month");
-            month.InnerText = "05";
-            issueDate.Attributes.Append(month);
+                //dmTitle-----------------------------------------------------------
 
-            XmlAttribute year = doc.CreateAttribute("year");
-            year.InnerText = "2015";
-            issueDate.Attributes.Append(year);
+                XmlNode dmTitle = doc.CreateElement("dmTitle");
 
-            dmAddressItems.AppendChild(issueDate);
+                XmlNode techName = doc.CreateElement("techName");
+                if(_411._411DmcTitle.IndexOf(" - ")  > -1)
+                {
+                    techName.InnerText = _411._411DmcTitle.Substring(0, _411._411DmcTitle.IndexOf(" - "));
+                }
+                else if(_411._411DmcTitle.IndexOf("-") > -1)
+                {
+                    techName.InnerText = _411._411DmcTitle.Substring(0, _411._411DmcTitle.IndexOf("- "));
+                }
+                else
+                {
+                    throw new Exception("Error in formatting of dcm title: " + _411._411DmcTitle);
+                }
 
-            //dmTitle-----------------------------------------------------------
+                XmlNode infoName = doc.CreateElement("infoName");
+                if (_411._411DmcTitle.IndexOf(" - ") > -1)
+                {
+                    infoName.InnerText = _411._411DmcTitle.Substring(_411._411DmcTitle.IndexOf(" - ")).TrimStart(new char[] { ' ', '-' });
+                }
+                else if (_411._411DmcTitle.IndexOf("-") > -1)
+                {
+                    infoName.InnerText = _411._411DmcTitle.Substring(_411._411DmcTitle.IndexOf("- ")).TrimStart(new char[] { ' ', '-' });
+                }
+                else
+                {
+                    throw new Exception("Error in formatting of dcm title: " + _411._411DmcTitle);
+                }
+                
+                dmTitle.AppendChild(techName);
+                dmTitle.AppendChild(infoName);
 
-            XmlNode dmTitle = doc.CreateElement("dmTitle");
+                dmAddressItems.AppendChild(dmTitle);
 
-            XmlNode techName = doc.CreateElement("techName");
-            techName.InnerText = _411._411DmcTitle.Substring(0, _411._411DmcTitle.IndexOf(" - "));
+                dmAddress.AppendChild(dmAddressItems);
 
-            XmlNode infoName = doc.CreateElement("infoName");
-            infoName.InnerText = _411._411DmcTitle.Substring(_411._411DmcTitle.IndexOf(" - ")).TrimStart(new char[] { ' ','-'});
-            dmTitle.AppendChild(techName);
-            dmTitle.AppendChild(infoName);
+                identAndStatusSection.AppendChild(dmAddress);
 
-            dmAddressItems.AppendChild(dmTitle);
+                //dmStatus------------------------------------------------------
+                XmlNode dmStatus = doc.CreateElement("dmStatus");
 
-            dmAddress.AppendChild(dmAddressItems);
+                XmlAttribute issueType = doc.CreateAttribute("issueType");
+                issueType.InnerText = "new";
+                dmStatus.Attributes.Append(issueType);
 
-            identAndStatusSection.AppendChild(dmAddress);
+                XmlNode security = doc.CreateElement("security");
 
-            //dmStatus------------------------------------------------------
+                XmlAttribute securityClassification = doc.CreateAttribute("securityClassification");
+                securityClassification.InnerText = "01";
+                security.Attributes.Append(securityClassification);
 
-            XmlNode dmStatus = doc.CreateElement("dmStatus");
+                dmStatus.AppendChild(security);
 
-            XmlAttribute issueType = doc.CreateAttribute("issueType");
-            issueType.InnerText = "new";
-            dmStatus.Attributes.Append(issueType);
+            XmlNode applicCrossRefTableRef = doc.CreateElement("applicCrossRefTableRef");
+                XmlNode applicCrossRefTableRefDmRef = doc.CreateElement("dmRef");
+                XmlNode applicCrossRefTableRefDmRefDmRefIdent = doc.CreateElement("dmRefIdent");
+                XmlNode applicCrossRefTableRefDmCode = XmlUtils.BuildDmRef("HH60W-A-00-00-0000-00AAA-00WA-A", doc);
 
-            XmlNode security = doc.CreateElement("security");
+            applicCrossRefTableRefDmRefDmRefIdent.AppendChild(applicCrossRefTableRefDmCode);
+            applicCrossRefTableRefDmRef.AppendChild(applicCrossRefTableRefDmRefDmRefIdent);
 
-            XmlAttribute securityClassification = doc.CreateAttribute("securityClassification");
-            securityClassification.InnerText = "01";
-            security.Attributes.Append(securityClassification);
+            XmlNode dmRefAddressItems = doc.CreateElement("dmRefAddressItems");
 
-            dmStatus.AppendChild(security);
+            XmlNode applicCrossRefTableRefDmTitle = doc.CreateElement("dmTitle");
 
-            XmlNode dataRestrictions = doc.CreateElement("dataRestrictions");
-            XmlNode restrictionInstructions = doc.CreateElement("restrictionInstructions");
-            XmlNode dataDistribution = doc.CreateElement("dataDistribution");
+            XmlNode applicCrossRefTableRefTechName = doc.CreateElement("techName");
+            applicCrossRefTableRefTechName.InnerText = "Combat Rescue Helicopter (CRH)";
+            applicCrossRefTableRefDmTitle.AppendChild(applicCrossRefTableRefTechName);
 
-            restrictionInstructions.AppendChild(dataDistribution);
+            XmlNode applicCrossRefTableRefInfoName = doc.CreateElement("infoName");
+            applicCrossRefTableRefInfoName.InnerText = "Applicability Cross-reference Table (ACT)";
+            applicCrossRefTableRefDmTitle.AppendChild(applicCrossRefTableRefInfoName);
 
-            XmlNode exportControl = doc.CreateElement("exportControl");
-            XmlNode exportRegistrationStmt = doc.CreateElement("exportRegistrationStmt");
-            XmlNode simplePara = doc.CreateElement("simplePara");
-            exportRegistrationStmt.AppendChild(simplePara);
-            exportControl.AppendChild(exportRegistrationStmt);
-            restrictionInstructions.AppendChild(exportControl);
-            dataRestrictions.AppendChild(restrictionInstructions);
-            dmStatus.AppendChild(dataRestrictions);
+            dmRefAddressItems.AppendChild(applicCrossRefTableRefDmTitle);
+            applicCrossRefTableRefDmRef.AppendChild(dmRefAddressItems);
+
+            applicCrossRefTableRef.AppendChild(applicCrossRefTableRefDmRef);
+
+            dmStatus.AppendChild(applicCrossRefTableRef);
 
             XmlNode responsiblePartnerCompany = doc.CreateElement("responsiblePartnerCompany");
 
-            XmlAttribute enterpriseCode = doc.CreateAttribute("enterpriseCode");
-            enterpriseCode.InnerText = "";
-            responsiblePartnerCompany.Attributes.Append(enterpriseCode);
-            dmStatus.AppendChild(responsiblePartnerCompany);
+                XmlAttribute enterpriseCode = doc.CreateAttribute("enterpriseCode");
+                enterpriseCode.InnerText = "78286";
+                responsiblePartnerCompany.Attributes.Append(enterpriseCode);
+                dmStatus.AppendChild(responsiblePartnerCompany);
+                XmlNode originator = doc.CreateElement("originator");
 
-            XmlNode originator = doc.CreateElement("originator");
+                XmlAttribute enterpriseCode1 = doc.CreateAttribute("enterpriseCode");
+                enterpriseCode1.InnerText = "78286";
+                originator.Attributes.Append(enterpriseCode1);
+                dmStatus.AppendChild(originator);
 
-            XmlAttribute enterpriseCode1 = doc.CreateAttribute("enterpriseCode");
-            enterpriseCode1.InnerText = "";
-            originator.Attributes.Append(enterpriseCode1);
-            dmStatus.AppendChild(originator);
+                XmlNode applic = doc.CreateElement("applic");
+                XmlNode displayText = doc.CreateElement("displayText");
+                XmlNode simplePara1 = doc.CreateElement("simplePara");
+                simplePara1.InnerText = "All";
+                displayText.AppendChild(simplePara1);
+                applic.AppendChild(displayText);
+                dmStatus.AppendChild(applic);
 
-            XmlNode applic = doc.CreateElement("applic");
-            XmlNode displayText = doc.CreateElement("displayText");
-            XmlNode simplePara1 = doc.CreateElement("simplePara");
-            simplePara1.InnerText = "All";
-            displayText.AppendChild(simplePara1);
-            applic.AppendChild(displayText);
-            dmStatus.AppendChild(applic);
+                XmlNode brexDmRef = doc.CreateElement("brexDmRef");
+                XmlNode dmRef = doc.CreateElement("dmRef");
 
-            XmlNode brexDmRef = doc.CreateElement("brexDmRef");
-            XmlNode dmRef = doc.CreateElement("dmRef");
-            XmlAttribute xlink_actuate = doc.CreateAttribute("xlink:actuate");
-            xlink_actuate.InnerText = "onRequest";
-            dmRef.Attributes.Append(xlink_actuate);
-            XmlAttribute xlink_href = doc.CreateAttribute("xlink:href");
-            xlink_href.InnerText = "URN:S1000D:DMC-S1000DBIKE-AAA-D00-00-00-00AA-022A-D_005";
-            dmRef.Attributes.Append(xlink_href);
-            XmlAttribute xlink_show = doc.CreateAttribute("xlink:show");
-            xlink_show.InnerText = "replace";
-            dmRef.Attributes.Append(xlink_show);
-            XmlAttribute xlink_type = doc.CreateAttribute("xlink:type");
-            xlink_type.InnerText = "simple";
-            dmRef.Attributes.Append(xlink_type);
+                XmlNode dmRefIdent = doc.CreateElement("dmRefIdent");
 
-            XmlNode dmRefIdent = doc.CreateElement("dmRefIdent");
+            XmlNode dmCode1 = XmlUtils.BuildDmRef("HH60W-A-00-00-0000-0000A-022A-D",doc);
 
-            XmlNode dmCode1 = doc.CreateElement("dmCode");
+                dmRefIdent.AppendChild(dmCode1);
 
-            XmlAttribute assyCode1 = doc.CreateAttribute("assyCode");
-            assyCode1.InnerText = "00";
-            dmCode1.Attributes.Append(assyCode1);
+                
 
-            XmlAttribute disassyCode1 = doc.CreateAttribute("disassyCode");
-            assyCode1.InnerText = "00";
-            dmCode1.Attributes.Append(disassyCode1);
+                XmlNode issueInfo1 = doc.CreateElement("issueInfo");
+                XmlAttribute inWork1 = doc.CreateAttribute("inWork");
+                inWork1.InnerText = "00";
+                issueInfo1.Attributes.Append(inWork1);
 
-            XmlAttribute disassyCodeVariant1 = doc.CreateAttribute("disassyCodeVariant");
-            disassyCodeVariant1.InnerText = "AA";
-            dmCode1.Attributes.Append(disassyCodeVariant1);
+                XmlAttribute issueNumber1 = doc.CreateAttribute("issueNumber");
+                issueNumber1.InnerText = "005";
+                issueInfo1.Attributes.Append(issueNumber1);
+                dmRefIdent.AppendChild(issueInfo1);
 
-            XmlAttribute infoCode1 = doc.CreateAttribute("infoCode");
-            infoCode1.InnerText = "022";
-            dmCode1.Attributes.Append(infoCode1);
+                dmRef.AppendChild(dmRefIdent);
 
-            XmlAttribute infoCodeVariant1 = doc.CreateAttribute("infoCodeVariant");
-            infoCodeVariant1.InnerText = "A";
-            dmCode1.Attributes.Append(infoCodeVariant1);
+            XmlNode brexDmRefAddressItems = doc.CreateElement("dmRefAddressItems");
 
-            XmlAttribute itemLocationCode1 = doc.CreateAttribute("itemLocationCode");
-            itemLocationCode1.InnerText = "D";
-            dmCode1.Attributes.Append(itemLocationCode1);
+            XmlNode brexDmRefDmtitle = doc.CreateElement("dmTitle");
 
-            XmlAttribute modelIdentCode1 = doc.CreateAttribute("modelIdentCode");
-            modelIdentCode1.InnerText = "S1000DBIKE";
-            dmCode1.Attributes.Append(modelIdentCode1);
+            XmlNode brexDmRefTechName = doc.CreateElement("techName");
 
-            XmlAttribute subSubSystemCode1 = doc.CreateAttribute("subSubSystemCode");
-            subSubSystemCode1.InnerText = "0";
-            dmCode1.Attributes.Append(subSubSystemCode1);
+            brexDmRefTechName.InnerText = "Combat Rescue Helicopter (CRH";
 
-            XmlAttribute subSystemCode1 = doc.CreateAttribute("subSystemCode");
-            subSystemCode1.InnerText = "0";
-            dmCode1.Attributes.Append(subSystemCode1);
+            brexDmRefDmtitle.AppendChild(brexDmRefTechName);
 
-            XmlAttribute systemCode1 = doc.CreateAttribute("systemCode");
-            systemCode1.InnerText = "D00";
-            dmCode1.Attributes.Append(systemCode1);
+            XmlNode brexDmRefInfoName = doc.CreateElement("infoName");
 
-            XmlAttribute systemDiffCode1 = doc.CreateAttribute("systemDiffCode");
-            systemDiffCode1.InnerText = "AAA";
-            dmCode1.Attributes.Append(systemDiffCode1);
+            brexDmRefInfoName.InnerText = "Business rule exchange (BREX)";
 
-            dmRefIdent.AppendChild(dmCode1);
+            brexDmRefDmtitle.AppendChild(brexDmRefInfoName);
 
-            XmlNode issueInfo1 = doc.CreateElement("issueInfo");
-            XmlAttribute inWork1 = doc.CreateAttribute("inWork");
-            inWork1.InnerText = "00";
-            issueInfo1.Attributes.Append(inWork1);
+            brexDmRefAddressItems.AppendChild(brexDmRefDmtitle);
 
-            XmlAttribute issueNumber1 = doc.CreateAttribute("issueNumber");
-            issueNumber1.InnerText = "005";
-            issueInfo1.Attributes.Append(issueNumber1);
-            dmRefIdent.AppendChild(issueInfo1);
+            dmRef.AppendChild(brexDmRefAddressItems);
 
-            dmRef.AppendChild(dmRefIdent);
             brexDmRef.AppendChild(dmRef);
-            dmStatus.AppendChild(brexDmRef);
+                dmStatus.AppendChild(brexDmRef);
 
-            XmlNode qualityAssurance = doc.CreateElement("qualityAssurance");
-            XmlNode unverified = doc.CreateElement("unverified");
-            qualityAssurance.AppendChild(unverified);
-            dmStatus.AppendChild(qualityAssurance);
+                XmlNode qualityAssurance = doc.CreateElement("qualityAssurance");
+                XmlNode unverified = doc.CreateElement("unverified");
+                qualityAssurance.AppendChild(unverified);
+                dmStatus.AppendChild(qualityAssurance);
 
 
-            identAndStatusSection.AppendChild(dmStatus);
+                identAndStatusSection.AppendChild(dmStatus);
 
-            dmodule.AppendChild(identAndStatusSection);
+                dmodule.AppendChild(identAndStatusSection);
 
-            XmlNode content = doc.CreateElement("content");
+                XmlNode content = doc.CreateElement("content");
+
+            XmlNode refs = doc.CreateElement("refs");
+
+            XmlNode contentDmRef = doc.CreateElement("dmRef");
+
+            XmlNode contentDmRefIdent = doc.CreateElement("dmRefIdent");
+
+            XmlNode contentDmcode = XmlUtils.BuildDmRef(_411.FaultIsolationElements[0]._920DMC,doc);
+
+            contentDmRefIdent.AppendChild(contentDmcode);
+
+            contentDmRef.AppendChild(contentDmRefIdent);
+
+            XmlNode contentDmRefAddressItems = doc.CreateElement("dmRefAddressItems");
+
+            XmlNode contentDmtitle = doc.CreateElement("dmTitle");
+            
+            XmlNode contenTechName = doc.CreateElement("techName");
+
+            contenTechName.InnerText = _411.FaultIsolationElements[0]._920DmcTitle.Substring(0, _411.FaultIsolationElements[0]._920DmcTitle.IndexOf(" - "));
+
+            contentDmtitle.AppendChild(contenTechName);
+
+            XmlNode contentInfo = doc.CreateElement("infoName");
+
+            contentInfo.InnerText = _411.FaultIsolationElements[0]._920DmcTitle.Substring(_411.FaultIsolationElements[0]._920DmcTitle.IndexOf(" - ")).TrimStart(new char[] { ' ', '-' });
+
+            contentDmtitle.AppendChild(contentInfo);
+
+            contentDmRefAddressItems.AppendChild(contentDmtitle);
+
+            contentDmRef.AppendChild(contentDmRefAddressItems);
+
+            refs.AppendChild(contentDmRef);
+
+            content.AppendChild(refs);
 
             XmlNode faultIsolation = buildFaultIsolationProcedures(_411.FaultIsolationElements, doc);
 
             content.AppendChild(faultIsolation);
 
-            dmodule.AppendChild(content);
+                dmodule.AppendChild(content);
 
-            doc.AppendChild(dmodule);
+                doc.AppendChild(dmodule);
 
-            XmlElement root = doc.DocumentElement;
-            doc.InsertBefore(xmldecl, root);
-            doc.Save(_411.excelPath + "/" + _411._411DMC + ".xml");
+                XmlElement root = doc.DocumentElement;
+                doc.InsertBefore(xmldecl, root);
+                doc.Save(_411.excelPath + "/" + _411._411DMC + ".xml");
         }
 
         public static XmlNode buildFaultIsolationProcedures(List<FaultIsolation> faultIsolationProcedures, XmlDocument doc)
         {
-            XmlNode faultIsolation = doc.CreateElement("faultIsolation");
+            XmlNode faultReporting = doc.CreateElement("faultReporting");
 
             foreach (FaultIsolation f in faultIsolationProcedures)
             {
-                XmlNode faultIsolationProcedure = doc.CreateElement("faultIsolationProcedure");
+                XmlNode isolatedFault = doc.CreateElement("isolatedFault");
+
                 XmlAttribute id = doc.CreateAttribute("id");
                 id.InnerText = f.FaultIsolationProcedureId;
-                faultIsolationProcedure.Attributes.Append(id);
-
-                XmlNode fault = doc.CreateElement("fault");
+                isolatedFault.Attributes.Append(id);
 
                 XmlAttribute faultCode = doc.CreateAttribute("faultCode");
                 faultCode.InnerText = f.FaultCode;
-
-                fault.Attributes.Append(faultCode);
-
-                faultIsolationProcedure.AppendChild(fault);
+                isolatedFault.Attributes.Append(faultCode);
 
                 XmlNode faultDescr = doc.CreateElement("faultDescr");
+
                 XmlNode descr = doc.CreateElement("descr");
-                descr.InnerText = f.MaintenanceTaskName;
+
+                descr.InnerText = f.FailureName;
+
                 faultDescr.AppendChild(descr);
 
-                faultIsolationProcedure.AppendChild(faultDescr);
+                isolatedFault.AppendChild(faultDescr);
 
-                XmlNode isolationProcedure = doc.CreateElement("isolationProcedure");
+                XmlNode locateAndRepair = doc.CreateElement("locateAndRepair");
 
-                XmlNode preliminaryRqmts = doc.CreateElement("preliminaryRqmts");
+                XmlNode locateAndRepairLruItem = doc.CreateElement("locateAndRepairLruItem");
 
-                XmlNode reqCondGroup = doc.CreateElement("reqCondGroup");
-                XmlNode noConds = doc.CreateElement("noConds");
-                reqCondGroup.AppendChild(noConds);
+                XmlNode lru = doc.CreateElement("lru");
 
-                preliminaryRqmts.AppendChild(reqCondGroup);
+                XmlNode name = doc.CreateElement("name");
 
-                XmlNode reqSupportEquips = doc.CreateElement("reqSupportEquips");
-                XmlNode noSupportEquips = doc.CreateElement("noSupportEquips");
-                reqSupportEquips.AppendChild(noSupportEquips);
+                name.InnerText = f.Name;
 
-                preliminaryRqmts.AppendChild(reqSupportEquips);
+                lru.AppendChild(name);
 
-                XmlNode reqSupplies = doc.CreateElement("reqSupplies");
-                XmlNode noSupplies = doc.CreateElement("noSupplies");
-                reqSupplies.AppendChild(noSupplies);
+                locateAndRepairLruItem.AppendChild(lru);
 
-                preliminaryRqmts.AppendChild(reqSupplies);
+                XmlNode repair = doc.CreateElement("repair");
 
-                XmlNode reqSpares = doc.CreateElement("reqSpares");
-                XmlNode noSpares = doc.CreateElement("noSpares");
-                reqSpares.AppendChild(noSpares);
-
-                preliminaryRqmts.AppendChild(reqSpares);
-
-                XmlNode reqSafety = doc.CreateElement("reqSafety");
-                XmlNode noSafety = doc.CreateElement("noSafety");
-                reqSafety.AppendChild(noSafety);
-
-                preliminaryRqmts.AppendChild(reqSafety);
-
-                isolationProcedure.AppendChild(preliminaryRqmts);
-
-                XmlNode isolationMainProcedure = doc.CreateElement("isolationMainProcedure");
-
-                XmlNode isolationProcedureEnd = doc.CreateElement("isolationProcedureEnd");
-
-                XmlAttribute isolationProcedureEndId = doc.CreateAttribute("id");
-                isolationProcedureEndId.InnerText = f.FaultIsolationProcedureId.Replace("FI", "IE");
-                isolationProcedureEnd.Attributes.Append(isolationProcedureEndId);
-
-                XmlNode action = doc.CreateElement("action");
+                XmlNode refs = doc.CreateElement("refs");
 
                 XmlNode dmRef = doc.CreateElement("dmRef");
 
@@ -370,31 +374,23 @@ namespace _38_39Conversion.XmlGenerationFiles
                 dmTitle.AppendChild(techName);
                 dmTitle.AppendChild(infoName);
 
+                dmRefAddressItems.AppendChild(dmTitle);
+
                 dmRef.AppendChild(dmRefAddressItems);
 
-                action.AppendChild(dmRef);
+                refs.AppendChild(dmRef);
 
-                isolationProcedureEnd.AppendChild(action);
+                repair.AppendChild(refs);
 
-                isolationMainProcedure.AppendChild(isolationProcedureEnd);
+                locateAndRepairLruItem.AppendChild(repair);
 
-                isolationProcedure.AppendChild(isolationMainProcedure);
+                locateAndRepair.AppendChild(locateAndRepairLruItem);
 
-                XmlNode closeRqmts = doc.CreateElement("closeRqmts");
+                isolatedFault.AppendChild(locateAndRepair);
 
-                XmlNode reqCondGroupCls = doc.CreateElement("reqCondGroup");
-                XmlNode noCondsCls = doc.CreateElement("noConds");
-                reqCondGroupCls.AppendChild(noCondsCls);
-
-                closeRqmts.AppendChild(reqCondGroupCls);
-
-                isolationProcedure.AppendChild(closeRqmts);
-
-                faultIsolationProcedure.AppendChild(isolationProcedure);
-
-                faultIsolation.AppendChild(faultIsolationProcedure);
+                faultReporting.AppendChild(isolatedFault);
             }
-            return faultIsolation;
+            return faultReporting;
         }
     }
 }

@@ -28,10 +28,16 @@ namespace _38_39Conversion._38ConversionFiles
             {
                 IDictionary<string, object> dict = new Dictionary<string, object>();
                 HSSFWorkbook hssfwb;
-                
-                using (FileStream excelFile = new FileStream(file, FileMode.Open, FileAccess.Read))
+                try
                 {
-                    hssfwb = new HSSFWorkbook(excelFile);
+                    using (FileStream excelFile = new FileStream(file, FileMode.Open, FileAccess.Read))
+                    {
+                        hssfwb = new HSSFWorkbook(excelFile);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception("Error opening " + file + ". Please check if this file is open.");
                 }
                 ISheet sheet = hssfwb.GetSheetAt(0);
                 ExcelXlsUtils xlsUtils = new ExcelXlsUtils();
@@ -41,12 +47,6 @@ namespace _38_39Conversion._38ConversionFiles
                 dict["page"] = getCellReferenceValue("I1", sheet);
                 dict["revision"] = getCellReferenceValue("E2", sheet);
                 dict["revDate"] = getCellReferenceValue("I2", sheet);
-                dict["model"] = getCellReferenceValue("B4", sheet);
-                dict["deliverableNo"] = getCellReferenceValue("E4", sheet);
-                dict["statDate"] = getCellReferenceValue("I4", sheet);
-                dict["reviewedBy"] = getCellReferenceValue("C5", sheet);
-                dict["date"] = getCellReferenceAsDate("I5", sheet);
-                dict["author"] = getCellReferenceValue("C7", sheet);
                 List<Item> items = new List<Item>();
                 Boolean keepGoing = true;
                 int i = getItemNoIndex(sheet)+1;
@@ -115,8 +115,7 @@ namespace _38_39Conversion._38ConversionFiles
             }
             catch(Exception e)
             {
-                MessageBox.Show("Exception in "+ file);
-                return null;
+                throw new Exception(e.Message);
             }
         }
 
@@ -143,9 +142,8 @@ namespace _38_39Conversion._38ConversionFiles
                         }
                     }
                 }
-                Console.WriteLine();
             }
-            throw new ArgumentException("item no row index not found");
+            throw new Exception("item no row index not found");
         }
 
         
@@ -163,10 +161,9 @@ namespace _38_39Conversion._38ConversionFiles
                 }
                 return mergedValue;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                MessageBox.Show("the exception is in getMergedValue");
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -176,6 +173,7 @@ namespace _38_39Conversion._38ConversionFiles
         {
             try
             {
+       
                 DataFormatter formatter = new DataFormatter();
                 var cr = new CellReference(cell);
                 if (cr == null)
@@ -198,8 +196,7 @@ namespace _38_39Conversion._38ConversionFiles
             }
             catch (Exception e)
             {
-                MessageBox.Show("the exception is in getCellReferenceValue");
-                return "";
+                throw new Exception(e.Message);
             }
             
         }

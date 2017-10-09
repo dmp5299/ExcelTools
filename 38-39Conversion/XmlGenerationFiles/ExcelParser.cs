@@ -22,7 +22,14 @@ namespace _38_39Conversion.XmlGenerationFiles
 
         public ExcelParser(string excelFile)
         {
-            package = new ExcelPackage(new FileInfo(excelFile));
+            try
+            {
+                package = new ExcelPackage(new FileInfo(excelFile));
+            }
+            catch(Exception)
+            {
+                throw new Exception("Error opening " + excelFile + ". Check if this file is already open.");
+            }
         }
 
         public void getExcelData(string filePath)
@@ -30,7 +37,6 @@ namespace _38_39Conversion.XmlGenerationFiles
             workSheet = package.Workbook.Worksheets.FirstOrDefault();
 
             List<_38_39Conversion.ExcelObjects.ExcelRow> newcollection = workSheet.ConvertSheetToObjects<_38_39Conversion.ExcelObjects.ExcelRow>().OrderBy(o => o._411DmcTitle).ToList();
-
             _411s = build411Modules(newcollection, filePath);
         }
 
@@ -52,21 +58,23 @@ namespace _38_39Conversion.XmlGenerationFiles
                     FaultIsolation f = new FaultIsolation()
                     {
                         FaultCode = rows[i].Id,
+                        FailureName = rows[i].FailureName,
                         MaintenanceTaskName = rows[i].MaintenanceTaskName,
-                        FaultIsolationProcedureId = string.IsNullOrEmpty(rows[i].FaultIsolationProcedureId) ? "" : Regex.Match(rows[i].FaultIsolationProcedureId, "\"[^\"]*\"").ToString().Replace("\"", ""),
+                        FaultIsolationProcedureId = rows[i].FaultIsolationProcedureId,
                         _920DmcTitle = rows[i]._920DmcTitle,
-                        _920DMC = rows[i]._920DMC
+                        _920DMC = rows[i]._920DMC,
+                        Name = rows[i].Name
                     };
                     _920Module _920 = new _920Module()
                     {
                         _920DmcTitle = rows[i]._920DmcTitle,
                         _920DMC = rows[i]._920DMC
                     };
-                    faultIsolation.Add(buildFaultIsolationObject(rows[i].Id, rows[i].MaintenanceTaskName, rows[i].FaultIsolationProcedureId, rows[i]._920DmcTitle, rows[i]._920DMC));
+                    faultIsolation.Add(buildFaultIsolationObject(rows[i].Name, rows[i].Id, rows[i].FailureName, rows[i].MaintenanceTaskName, rows[i].FaultIsolationProcedureId, rows[i]._920DmcTitle, rows[i]._920DMC));
                     int oldRow = i;
                     while ((i+1 < rows.Count) && (rows[i + 1]._411DmcTitle == rows[oldRow]._411DmcTitle))
                     {
-                        faultIsolation.Add(buildFaultIsolationObject(rows[i + 1].Id, rows[i + 1].MaintenanceTaskName, rows[i + 1].FaultIsolationProcedureId,
+                        faultIsolation.Add(buildFaultIsolationObject(rows[i + 1].Name,rows[i + 1].Id, rows[i + 1].FailureName, rows[i + 1].MaintenanceTaskName, rows[i + 1].FaultIsolationProcedureId,
                             rows[i + 1]._920DmcTitle, rows[i + 1]._920DMC));
                         if ((i + 1) == rows.Count)
                             break;
@@ -80,11 +88,12 @@ namespace _38_39Conversion.XmlGenerationFiles
             return _411s;
         }
 
-        public FaultIsolation buildFaultIsolationObject(string faultCode, string maintenanceTaskName, string faultIsolationProcedureId, string _920DmcTitle, string _920DMC)
+        public FaultIsolation buildFaultIsolationObject(string name, string faultCode, string failureName, string maintenanceTaskName, string faultIsolationProcedureId, string _920DmcTitle, string _920DMC)
         {
-            faultIsolationProcedureId = string.IsNullOrEmpty(faultIsolationProcedureId) ? "" : Regex.Match(faultIsolationProcedureId, "\"[^\"]*\"").ToString().Replace("\"", "");
             return new FaultIsolation()
             {
+                Name = name,
+                FailureName = failureName,
                 FaultCode = faultCode,
                 MaintenanceTaskName = maintenanceTaskName,
                 FaultIsolationProcedureId = faultIsolationProcedureId,

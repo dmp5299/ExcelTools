@@ -3,3 +3,11 @@ C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\Contenta
 C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\ContentaDataExport.pdb
 C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\obj\Debug\ContentaDataExport.dll
 C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\obj\Debug\ContentaDataExport.pdb
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\EPPlus.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\NPOI.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\NPOI.OOXML.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\NPOI.OpenXml4Net.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\NPOI.OpenXmlFormats.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\EPPlus.xml
+C:\Users\dpothier\Documents\Visual Studio 2017\Projects\38-39Conversion\ContentaDataExport\bin\Debug\NPOI.xml

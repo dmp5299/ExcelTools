@@ -13,6 +13,10 @@ namespace _38_39Conversion.ExcelObjects
         [Required]
         public string Id { get; set; }
 
+        [Column(3)]
+        [Required]
+        public string FailureName { get; set; }
+
         [Column(4)]
         [Required]
         public string MaintenanceTaskName { get; set; }
@@ -36,5 +40,9 @@ namespace _38_39Conversion.ExcelObjects
         [Column(9)]
         [Required]
         public string _920DMC{ get; set; }
+
+        [Column(10)]
+        [Required]
+        public string Name { get; set; }
     }
 }
